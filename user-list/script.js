@@ -31,7 +31,8 @@ const getData = function () {
         // prima di continuare a estrarre il JSON da questa risposta, devo verificare
         // il valore di "ok" (che in un colpo solo ci da il risultato dell'operazione)
         // se il valore di "ok" è true, sono pronto per estrarre il JSON da questa response
-        return response.json() // estrae il JSON dalla response
+        return response.json() // estrae il JSON dalla response, ma con una Promise!!!
+        // lo attendo con un blocco .then e .catch successivo (riga 47, 52)
       } else {
         // qui vuol dire che la response del server è arrivata, ma che NON CONTIENE i dati cercati
         // dobbiamo gestire l'errore... invece che DUPLICARE la gestione dell'errore, teniamo solo
@@ -44,7 +45,16 @@ const getData = function () {
     })
     // questo ulteriore blocco then ci serve per aspettare il finale "positivo" del response.json()
     .then((arrayOfUsers) => {
+      // qui siamo finiti nel finale positivo della riga 34
       console.log('ARRAY UTENTI', arrayOfUsers)
+      // <li class="list-group-item">An item</li>
+      // prendo un riferimento alla ul vuota degli utenti
+      const usersList = document.getElementById('users') // <ul></ul>
+      for (let i = 0; i < arrayOfUsers.length; i++) {
+        usersList.innerHTML += `
+            <li class="list-group-item">${arrayOfUsers[i].name} - ${arrayOfUsers[i].phone}</li>
+        `
+      }
     })
     .catch((error) => {
       // nel blocco catch voi predisponete il codice per il finale NEGATIVO della Promise
